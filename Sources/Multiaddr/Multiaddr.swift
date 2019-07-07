@@ -2,7 +2,7 @@ import Foundation
 
 typealias Bytes = [UInt8]
 
-struct Address {
+struct Address: Equatable {
     let protocolCode: Protocol
     let address: String?
 }
@@ -11,8 +11,8 @@ struct Multiaddr {
     
     private(set) var addresses: [Address] = []
     
-    init?(_ string: String) {
-       addresses = createAddresses(from: string)
+    init(_ string: String) throws {
+       addresses = try createAddresses(from: string)
     }
     
     init?(_ bytes: Bytes) {
@@ -38,7 +38,7 @@ extension Multiaddr: CustomStringConvertible {
 
 // private / internal stuff
 extension Multiaddr {
-    func createAddresses(from string: String) -> [Address] {
+    func createAddresses(from string: String) throws -> [Address] {
         var components = string.split(separator: "/").map(String.init)
         var addresses = [Address]()
         while !components.isEmpty {
