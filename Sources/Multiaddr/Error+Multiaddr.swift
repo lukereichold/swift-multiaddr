@@ -1,5 +1,5 @@
 import Foundation
 
-extension Error {
-    // TODO
+enum MultiaddrError: Error {
+    case invalidFormat
 }

@@ -36,9 +36,9 @@ extension Multiaddr: CustomStringConvertible {
     }
 }
 
-// private / internal stuff
 extension Multiaddr {
     func createAddresses(from string: String) throws -> [Address] {
+        guard string.first == "/" else { throw MultiaddrError.invalidFormat }
         var components = string.split(separator: "/").map(String.init)
         var addresses = [Address]()
         while !components.isEmpty {
@@ -48,7 +48,6 @@ extension Multiaddr {
             
             var addressComponent: String?
             
-            // if we have a next and it is NOT a protocol, test this:
             if let next = components.first, !next.isProtocol() {
                 components.removeFirst()
                 addressComponent = next
