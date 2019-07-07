@@ -3,13 +3,17 @@ import XCTest
 
 final class MultiaddrTests: XCTestCase {
     func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(Multiaddr().text, "Hello, World!")
+        print(Protocol.ip4)
+        let m = Multiaddr("/ip4/127.0.0.1/udp/1234")
+        
+        var protoComponents = "/ip4/127.0.0.1/udp/1234".split{$0 == "/"}.map(String.init)
+//        print(protoComponents)
+        
+        
     }
 
     static var allTests = [
         ("testExample", testExample),
     ]
 }
+

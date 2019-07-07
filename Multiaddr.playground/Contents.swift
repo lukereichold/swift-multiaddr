@@ -1,3 +1,3 @@
-import UIKit
+import Multiaddr
 
-var str = "Hello, playground"
+let m = Multiaddr("/ip4/127.0.0.1/udp/1234")
