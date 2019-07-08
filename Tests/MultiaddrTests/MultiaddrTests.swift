@@ -68,6 +68,15 @@ final class MultiaddrTests: XCTestCase {
         XCTAssertEqual(m1.encapsulate(m2), expected)
     }
     
+    func testDecapsulate() {
+        let full = try! Multiaddr("/ip4/1.2.3.4/tcp/80")
+        let m1 = try! Multiaddr("/tcp/80")
+        let m2 = try! Multiaddr("/ip4/1.2.3.4")
+        
+        XCTAssertEqual(full.decapsulate(m1), m2)
+        XCTAssertEqual(full.decapsulate(m2), m1)
+    }
+    
     static var allTests = [
         ("testLinuxTestSuiteIncludesAllTests",
          testLinuxTestSuiteIncludesAllTests),
@@ -76,7 +85,9 @@ final class MultiaddrTests: XCTestCase {
         ("testCreateMultiaddrFromString_WithoutAddressValue", testCreateMultiaddrFromString_WithoutAddressValue),
         ("testCreateMultiaddrFromString_AddressValueHasMultipleSlashes", testCreateMultiaddrFromString_AddressValueHasMultipleSlashes),
         ("testCreateMultiaddrFromString_AddressValueHasColons", testCreateMultiaddrFromString_AddressValueHasColons),
-
+        ("testEncapsulated_BasedOnStringEquality", testEncapsulated_BasedOnStringEquality),
+        ("testEncapsulated_BasedOnObjectEquality", testEncapsulated_BasedOnObjectEquality),
+        ("testDecapsulate", testDecapsulate),
     ]
     
     /// Credit: https://oleb.net/blog/2017/03/keeping-xctest-in-sync/

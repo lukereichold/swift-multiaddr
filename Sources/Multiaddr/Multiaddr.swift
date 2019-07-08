@@ -4,13 +4,13 @@ typealias Bytes = [UInt8]
 
 struct Multiaddr: Equatable {
     
-    var addresses: [Address] = []
+    private(set) var addresses: [Address] = []
     
     init(_ string: String) throws {
        addresses = try createAddresses(from: string)
     }
     
-    init?(_ bytes: Bytes) {
+    init(_ bytes: Bytes) throws {
         // TODO: ..
     }
     
@@ -22,6 +22,12 @@ struct Multiaddr: Equatable {
         return Data() // TODO: Binary-packed form
     }
     
+    /// Returns a list of `Protocol` elements contained by this `Multiaddr`, ordered from left-to-right.
+    func protocols() -> [String] {
+        return addresses.map { $0.protocolCode.rawValue }
+    }
+    
+    /// Wraps this `Multiaddr` with another and returns the combination.
     func encapsulate(_ other: Multiaddr) -> Multiaddr {
         return Multiaddr(addresses + other.addresses)
     }
@@ -30,9 +36,16 @@ struct Multiaddr: Equatable {
         return encapsulate(try Multiaddr(other))
     }
     
-//    func decapsulate(_ other: Multiaddr) {
-//
-//    }
+    /// Returns a new `Multiaddr` with the outermost `Multiaddr` removed.
+    func decapsulate(_ other: Multiaddr) -> Multiaddr {
+        let new = addresses.filter { $0 != other.addresses.first }
+        return Multiaddr(new)
+    }
+    
+    /// Removes and returns the last `Address` of this `Multiaddr`.
+    mutating func pop() -> Address? {
+        return addresses.popLast()
+    }
 }
 
 extension Multiaddr: CustomStringConvertible {
