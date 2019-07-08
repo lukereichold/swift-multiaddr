@@ -2,14 +2,9 @@ import Foundation
 
 typealias Bytes = [UInt8]
 
-struct Address: Equatable {
-    let protocolCode: Protocol
-    let address: String?
-}
-
-struct Multiaddr {
+struct Multiaddr: Equatable {
     
-    private(set) var addresses: [Address] = []
+    var addresses: [Address] = []
     
     init(_ string: String) throws {
        addresses = try createAddresses(from: string)
@@ -19,20 +14,30 @@ struct Multiaddr {
         // TODO: ..
     }
     
-    func bytes() -> Data {
-        // don't worry about the binary packed version yet!
-        return Data()
+    init(_ addresses: [Address]) {
+        self.addresses = addresses
     }
     
-    // Aka "Append" to end
-    func encapsulate(_ protocol: Protocol) {
-        
+    func bytes() -> Data {
+        return Data() // TODO: Binary-packed form
     }
+    
+    func encapsulate(_ other: Multiaddr) -> Multiaddr {
+        return Multiaddr(addresses + other.addresses)
+    }
+    
+    func encapsulate(_ other: String) throws -> Multiaddr {
+        return encapsulate(try Multiaddr(other))
+    }
+    
+//    func decapsulate(_ other: Multiaddr) {
+//
+//    }
 }
 
 extension Multiaddr: CustomStringConvertible {
     var description: String {
-        return ""
+        return addresses.map { $0.description }.joined()
     }
 }
 
@@ -55,12 +60,6 @@ extension Multiaddr {
             addresses.append(newAddress)
         }
         return addresses
-    }
-}
-
-extension Multiaddr: Equatable {
-    static func == (lhs: Multiaddr, rhs: Multiaddr) -> Bool {
-        return true // TODO
     }
 }
 

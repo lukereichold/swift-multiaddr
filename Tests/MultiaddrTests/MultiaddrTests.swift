@@ -48,6 +48,26 @@ final class MultiaddrTests: XCTestCase {
         XCTAssertEqual(m.addresses[1], expectedAddress2)
     }
     
+    func testEncapsulated_BasedOnStringEquality() {
+        let m1 = try! Multiaddr("/ip4/127.0.0.1")
+        let m2 = try! Multiaddr("/udt")
+    
+        let encapsulated = m1.encapsulate(m2)
+        XCTAssertEqual(String(describing: encapsulated), "/ip4/127.0.0.1/udt")
+        
+        let m3 = try! Multiaddr("/ip4/127.0.0.1")
+        let encapsulated2 = try! m3.encapsulate("/udp/1234")
+        XCTAssertEqual(String(describing: encapsulated2), "/ip4/127.0.0.1/udp/1234")
+    }
+    
+    func testEncapsulated_BasedOnObjectEquality() {
+        let m1 = try! Multiaddr("/ip4/127.0.0.1")
+        let m2 = try! Multiaddr("/udt")
+        
+        let expected = try! Multiaddr("/ip4/127.0.0.1/udt")
+        XCTAssertEqual(m1.encapsulate(m2), expected)
+    }
+    
     static var allTests = [
         ("testLinuxTestSuiteIncludesAllTests",
          testLinuxTestSuiteIncludesAllTests),
