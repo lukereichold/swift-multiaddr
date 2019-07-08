@@ -6,8 +6,10 @@ enum Protocol: String, CaseIterable {
     case udp
     case dccp
     case ip6
+    case ip6zone
     case dns4
     case dns6
+    case dnsaddr
     case sctp
     case udt
     case utp
@@ -17,13 +19,17 @@ enum Protocol: String, CaseIterable {
     case http
     case https
     case onion
+    case onion3
+    case garlic64
+    case garlic32
     case quic
     case ws
     case wss
-    case Libp2pWebsocketStar
-    case Libp2pWebrtcStar
-    case Libp2pWebrtcDirect
-    case P2pCircuit
+    case p2pWebsocketStar
+    case p2pWebrtcStar
+    case p2pWebrtcDirect
+    case p2pCircuit
+    case memory
 }
 
 extension Protocol {
@@ -50,10 +56,14 @@ extension Protocol {
             return 33
         case .ip6:
             return 41
+        case .ip6zone:
+            return 42
         case .dns4:
             return 54
         case .dns6:
             return 55
+        case .dnsaddr:
+            return 56
         case .sctp:
             return 132
         case .udt:
@@ -72,20 +82,28 @@ extension Protocol {
             return 443
         case .onion:
             return 444
+        case .onion3:
+            return 445
+        case .garlic64:
+            return 446
+        case .garlic32:
+            return 447
         case .quic:
             return 460
         case .ws:
             return 477
         case .wss:
             return 478
-        case .Libp2pWebsocketStar:
+        case .p2pWebsocketStar:
             return 479
-        case .Libp2pWebrtcStar:
+        case .p2pWebrtcStar:
             return 275
-        case .Libp2pWebrtcDirect:
+        case .p2pWebrtcDirect:
             return 276
-        case .P2pCircuit:
+        case .p2pCircuit:
             return 290
+        case .memory:
+            return 777
         }
     }
 }
