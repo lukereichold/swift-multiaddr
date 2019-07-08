@@ -44,6 +44,20 @@ extension Protocol {
         }
     }
     
+    
+    // TODO: rename / change signature
+    func varIntCode() -> Data {
+        let byteCount = Varint.encodedSize(of: UInt64(code()))
+        var buffer = Data(count: byteCount)
+        buffer.withUnsafeMutableBytes { (unsafePointer: UnsafeMutableRawBufferPointer) in
+            guard let baseAddress = unsafePointer.baseAddress, unsafePointer.count > 0 else { return }
+            let pointer = baseAddress.assumingMemoryBound(to: UInt8.self)
+            var encoder = BinaryEncoder(forWritingInto: pointer)
+            encoder.putVarInt(value: UInt64(code()))
+        }
+        return buffer
+    }
+    
     func code() -> Int {
         switch self {
         case .ip4:

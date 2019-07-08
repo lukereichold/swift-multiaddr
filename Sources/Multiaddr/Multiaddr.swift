@@ -18,6 +18,7 @@ struct Multiaddr: Equatable {
         self.addresses = addresses
     }
     
+    // TODO: implement Codable support
     func bytes() -> Data {
         return Data() // TODO: Binary-packed form
     }
@@ -36,7 +37,7 @@ struct Multiaddr: Equatable {
         return encapsulate(try Multiaddr(other))
     }
     
-    /// Returns a new `Multiaddr` with the outermost `Multiaddr` removed.
+    /// Returns a new `Multiaddr` with the outermost specified `Multiaddr` removed.
     func decapsulate(_ other: Multiaddr) -> Multiaddr {
         let new = addresses.filter { $0 != other.addresses.first }
         return Multiaddr(new)
