@@ -46,13 +46,12 @@ extension Multiaddr {
             
             guard current.isProtocol() else { continue }
             
-            var addressComponent: String?
-            
-            if let next = components.first, !next.isProtocol() {
+            var addressElements = [String]()
+            while let next = components.first, !next.isProtocol() {
                 components.removeFirst()
-                addressComponent = next
+                addressElements.append(next)
             }
-            let newAddress = Address(protocolCode: Protocol(rawValue: current)!, address: addressComponent)
+            let newAddress = Address(protocolCode: Protocol(rawValue: current)!, address: addressElements.combined())
             addresses.append(newAddress)
         }
         return addresses
@@ -62,6 +61,13 @@ extension Multiaddr {
 extension Multiaddr: Equatable {
     static func == (lhs: Multiaddr, rhs: Multiaddr) -> Bool {
         return true // TODO
+    }
+}
+
+extension Array where Element == String {
+    func combined() -> String? {
+        guard !isEmpty else { return nil }
+        return joined(separator: "/")
     }
 }
 

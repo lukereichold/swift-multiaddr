@@ -28,16 +28,35 @@ final class MultiaddrTests: XCTestCase {
         XCTAssertEqual(m.addresses[2], expectedAddress3)
     }
     
+    func testCreateMultiaddrFromString_AddressValueHasMultipleSlashes() {
+        let m = try! Multiaddr("/dns4/foo.com/tcp/80/http/bar/baz.jpg/onion")
+        let expectedAddress1 = Address(protocolCode: .dns4, address: "foo.com")
+        let expectedAddress2 = Address(protocolCode: .tcp, address: "80")
+        let expectedAddress3 = Address(protocolCode: .http, address: "bar/baz.jpg")
+        
+        XCTAssertEqual(m.addresses[0], expectedAddress1)
+        XCTAssertEqual(m.addresses[1], expectedAddress2)
+        XCTAssertEqual(m.addresses[2], expectedAddress3)
+    }
     
+    func testCreateMultiaddrFromString_AddressValueHasColons() {
+        let m = try! Multiaddr("/ip6/::1/tcp/3217")
+        let expectedAddress1 = Address(protocolCode: .ip6, address: "::1")
+        let expectedAddress2 = Address(protocolCode: .tcp, address: "3217")
+        
+        XCTAssertEqual(m.addresses[0], expectedAddress1)
+        XCTAssertEqual(m.addresses[1], expectedAddress2)
+    }
     
-    ///ip6/::1/tcp/3217
-    ///ip4/127.0.0.1/tcp/80/http/baz.jpg
-    ///dns4/foo.com/tcp/80/http/bar/baz.jpg
-
     static var allTests = [
         ("testLinuxTestSuiteIncludesAllTests",
          testLinuxTestSuiteIncludesAllTests),
         ("testCreateMultiaddrFromString", testCreateMultiaddrFromString),
+        ("testCreateMultiaddrFromString_LeadingSlashRequired", testCreateMultiaddrFromString_LeadingSlashRequired),
+        ("testCreateMultiaddrFromString_WithoutAddressValue", testCreateMultiaddrFromString_WithoutAddressValue),
+        ("testCreateMultiaddrFromString_AddressValueHasMultipleSlashes", testCreateMultiaddrFromString_AddressValueHasMultipleSlashes),
+        ("testCreateMultiaddrFromString_AddressValueHasColons", testCreateMultiaddrFromString_AddressValueHasColons),
+
     ]
     
     /// Credit: https://oleb.net/blog/2017/03/keeping-xctest-in-sync/
