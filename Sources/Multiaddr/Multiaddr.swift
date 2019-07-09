@@ -1,7 +1,5 @@
 import Foundation
 
-typealias Bytes = [UInt8]
-
 struct Multiaddr: Equatable {
     
     private(set) var addresses: [Address] = []
@@ -10,7 +8,7 @@ struct Multiaddr: Equatable {
        addresses = try createAddresses(from: string)
     }
     
-    init(_ bytes: Bytes) throws {
+    init(_ bytes: Data) throws {
         // TODO: ..
     }
     
@@ -18,14 +16,14 @@ struct Multiaddr: Equatable {
         self.addresses = addresses
     }
     
-    // TODO: implement Codable support
-    func bytes() -> Data {
-        return Data() // TODO: Binary-packed form
+    func binaryPacked() -> Data {
+        let bytes = addresses.flatMap { $0.binaryPacked() }
+        return Data(bytes: bytes, count: bytes.count)
     }
     
     /// Returns a list of `Protocol` elements contained by this `Multiaddr`, ordered from left-to-right.
     func protocols() -> [String] {
-        return addresses.map { $0.protocolCode.rawValue }
+        return addresses.map { $0.addrProtocol.rawValue }
     }
     
     /// Wraps this `Multiaddr` with another and returns the combination.
@@ -70,7 +68,7 @@ extension Multiaddr {
                 components.removeFirst()
                 addressElements.append(next)
             }
-            let newAddress = Address(protocolCode: Protocol(rawValue: current)!, address: addressElements.combined())
+            let newAddress = Address(addrProtocol: Protocol(rawValue: current)!, address: addressElements.combined())
             addresses.append(newAddress)
         }
         return addresses

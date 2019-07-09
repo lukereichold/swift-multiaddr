@@ -120,3 +120,18 @@ internal struct BinaryEncoder {
         append(contentsOf: value)
     }
 }
+
+extension UInt64 {
+    func varIntData() -> Data {
+        let byteCount = Varint.encodedSize(of: self)
+        var buffer = Data(count: byteCount)
+        buffer.withUnsafeMutableBytes { (unsafePointer: UnsafeMutableRawBufferPointer) in
+            guard let baseAddress = unsafePointer.baseAddress, unsafePointer.count > 0 else { return }
+            let pointer = baseAddress.assumingMemoryBound(to: UInt8.self)
+            var encoder = BinaryEncoder(forWritingInto: pointer)
+            encoder.putVarInt(value: self)
+        }
+        return buffer
+    }
+}
+

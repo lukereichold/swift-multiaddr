@@ -4,8 +4,8 @@ import XCTest
 final class MultiaddrTests: XCTestCase {
     func testCreateMultiaddrFromString() {
         let m = try! Multiaddr("/ip4/127.0.0.1/udp/1234")
-        let expectedAddress1 = Address(protocolCode: .ip4, address: "127.0.0.1")
-        let expectedAddress2 = Address(protocolCode: .udp, address: "1234")
+        let expectedAddress1 = Address(addrProtocol: .ip4, address: "127.0.0.1")
+        let expectedAddress2 = Address(addrProtocol: .udp, address: "1234")
         
         XCTAssertEqual(m.addresses.first, expectedAddress1)
         XCTAssertEqual(m.addresses.last, expectedAddress2)
@@ -19,9 +19,9 @@ final class MultiaddrTests: XCTestCase {
     
     func testCreateMultiaddrFromString_WithoutAddressValue() {
         let m = try! Multiaddr("/dns6/foo.com/tcp/443/https")
-        let expectedAddress1 = Address(protocolCode: .dns6, address: "foo.com")
-        let expectedAddress2 = Address(protocolCode: .tcp, address: "443")
-        let expectedAddress3 = Address(protocolCode: .https, address: nil)
+        let expectedAddress1 = Address(addrProtocol: .dns6, address: "foo.com")
+        let expectedAddress2 = Address(addrProtocol: .tcp, address: "443")
+        let expectedAddress3 = Address(addrProtocol: .https, address: nil)
         
         XCTAssertEqual(m.addresses[0], expectedAddress1)
         XCTAssertEqual(m.addresses[1], expectedAddress2)
@@ -30,9 +30,9 @@ final class MultiaddrTests: XCTestCase {
     
     func testCreateMultiaddrFromString_AddressValueHasMultipleSlashes() {
         let m = try! Multiaddr("/dns4/foo.com/tcp/80/http/bar/baz.jpg/onion")
-        let expectedAddress1 = Address(protocolCode: .dns4, address: "foo.com")
-        let expectedAddress2 = Address(protocolCode: .tcp, address: "80")
-        let expectedAddress3 = Address(protocolCode: .http, address: "bar/baz.jpg")
+        let expectedAddress1 = Address(addrProtocol: .dns4, address: "foo.com")
+        let expectedAddress2 = Address(addrProtocol: .tcp, address: "80")
+        let expectedAddress3 = Address(addrProtocol: .http, address: "bar/baz.jpg")
         
         XCTAssertEqual(m.addresses[0], expectedAddress1)
         XCTAssertEqual(m.addresses[1], expectedAddress2)
@@ -41,8 +41,8 @@ final class MultiaddrTests: XCTestCase {
     
     func testCreateMultiaddrFromString_AddressValueHasColons() {
         let m = try! Multiaddr("/ip6/::1/tcp/3217")
-        let expectedAddress1 = Address(protocolCode: .ip6, address: "::1")
-        let expectedAddress2 = Address(protocolCode: .tcp, address: "3217")
+        let expectedAddress1 = Address(addrProtocol: .ip6, address: "::1")
+        let expectedAddress2 = Address(addrProtocol: .tcp, address: "3217")
         
         XCTAssertEqual(m.addresses[0], expectedAddress1)
         XCTAssertEqual(m.addresses[1], expectedAddress2)
@@ -75,6 +75,19 @@ final class MultiaddrTests: XCTestCase {
         
         XCTAssertEqual(full.decapsulate(m1), m2)
         XCTAssertEqual(full.decapsulate(m2), m1)
+    }
+    
+    func testCreateMultiaddrFromString_FailsWithInvalidStrings() {
+        // TODO
+    }
+    
+    // TODO: WIP, driving out Protocol.binaryPackedAddress() implementation
+    func testBinaryPackedReturnsCorrectValue() {
+        let expected = "04c000022a0601bb"
+        let m = try! Multiaddr("/ip4/192.0.2.42/tcp/443")
+        print(m.binaryPacked())
+        
+        
     }
     
     static var allTests = [
