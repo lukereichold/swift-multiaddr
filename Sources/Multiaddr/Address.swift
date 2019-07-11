@@ -4,18 +4,20 @@ struct Address: Equatable {
     let addrProtocol: Protocol
     let address: String?
     
-    func binaryPacked() -> Data {
-        var data = Data()
-        data.append(addrProtocol.packedCode())
-        data.append(binaryPackedAddress())
-        return data
+    func binaryPacked() throws -> Data {
+        let bytes = [addrProtocol.packedCode(), try binaryPackedAddress()].compactMap{$0}.flatMap{$0}
+        return Data(bytes: bytes, count: bytes.count)
     }
     
-    // TODO! E.g. ports are encoded as raw numbers, whereas paths differ.
-    private func binaryPackedAddress() -> Data {
+    private func binaryPackedAddress() throws -> Data? {
+        guard let address = address else { return nil }
         switch addrProtocol {
+        case .tcp, .udp, .dccp, .sctp:
+            guard let port = UInt16(address) else { throw MultiaddrError.invalidPortValue }
+            var bigEndianPort = port.bigEndian
+            return Data(bytes: &bigEndianPort, count: MemoryLayout<UInt16>.size)
         default:
-            return Data()
+            return nil
         }
     }
 }

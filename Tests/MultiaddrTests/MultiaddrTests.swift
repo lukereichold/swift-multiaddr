@@ -80,15 +80,16 @@ final class MultiaddrTests: XCTestCase {
     func testCreateMultiaddrFromString_FailsWithInvalidStrings() {
         // TODO
     }
+
+    func testBinaryPackedReturnsCorrectValue_For16BitProtocolPort() {
+        let expected = "0601bb"
+        let m = try! Multiaddr("/tcp/443")
+        let actual = try! m.binaryPacked().hexString()
+        XCTAssertEqual(actual, expected)
+    }
     
     // TODO: WIP, driving out Protocol.binaryPackedAddress() implementation
-    func testBinaryPackedReturnsCorrectValue() {
-        let expected = "04c000022a0601bb"
-        let m = try! Multiaddr("/ip4/192.0.2.42/tcp/443")
-        print(m.binaryPacked())
-        
-        
-    }
+    // "/ip4/192.0.2.42/tcp/443" === "04c000022a0601bb"
     
     static var allTests = [
         ("testLinuxTestSuiteIncludesAllTests",
@@ -101,6 +102,8 @@ final class MultiaddrTests: XCTestCase {
         ("testEncapsulated_BasedOnStringEquality", testEncapsulated_BasedOnStringEquality),
         ("testEncapsulated_BasedOnObjectEquality", testEncapsulated_BasedOnObjectEquality),
         ("testDecapsulate", testDecapsulate),
+        ("testCreateMultiaddrFromString_FailsWithInvalidStrings", testCreateMultiaddrFromString_FailsWithInvalidStrings),
+        ("testBinaryPackedReturnsCorrectValue_For16BitProtocolPort", testBinaryPackedReturnsCorrectValue_For16BitProtocolPort),
     ]
     
     /// Credit: https://oleb.net/blog/2017/03/keeping-xctest-in-sync/

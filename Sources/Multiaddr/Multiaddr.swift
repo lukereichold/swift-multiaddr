@@ -16,8 +16,8 @@ struct Multiaddr: Equatable {
         self.addresses = addresses
     }
     
-    func binaryPacked() -> Data {
-        let bytes = addresses.flatMap { $0.binaryPacked() }
+    func binaryPacked() throws -> Data { // TODO: too many 'try's here?
+        let bytes = try addresses.flatMap { try $0.binaryPacked() }
         return Data(bytes: bytes, count: bytes.count)
     }
     
