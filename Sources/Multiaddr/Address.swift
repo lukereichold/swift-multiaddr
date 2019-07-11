@@ -16,6 +16,10 @@ struct Address: Equatable {
             guard let port = UInt16(address) else { throw MultiaddrError.invalidPortValue }
             var bigEndianPort = port.bigEndian
             return Data(bytes: &bigEndianPort, count: MemoryLayout<UInt16>.size)
+        case .ip4:
+            return try IPv4.data(for: address)
+        case .ip6:
+            return try IPv6.data(for: address)
         default:
             return nil
         }
