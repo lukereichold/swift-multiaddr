@@ -55,12 +55,14 @@ extension Multiaddr: CustomStringConvertible {
 
 extension Multiaddr {
     func createAddresses(from string: String) throws -> [Address] {
-        guard string.first == "/" else { throw MultiaddrError.invalidFormat }
-        var components = string.split(separator: "/").map(String.init)
+        var fullString = string
+        guard !fullString.isEmpty, fullString.removeFirst() == "/" else { throw MultiaddrError.invalidFormat }
+        var components = fullString.split(separator: "/", omittingEmptySubsequences: false).map(String.init)
         var addresses = [Address]()
         while !components.isEmpty {
             let current = components.removeFirst()
             
+            guard !current.isEmpty else { throw MultiaddrError.invalidFormat }
             guard current.isProtocol() else { continue }
             
             var addressElements = [String]()

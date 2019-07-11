@@ -78,7 +78,17 @@ final class MultiaddrTests: XCTestCase {
     }
     
     func testCreateMultiaddrFromString_FailsWithInvalidStrings() {
-        // TODO
+        let addresses = ["notAProtocol",
+                   "/ip4/tcp/alsoNotAProtocol",
+                   "////ip4/tcp/21432141///",
+                   "////ip4///////tcp////"]
+        
+        for addr in addresses {
+            XCTAssertThrowsError(try Multiaddr(addr)) { error in
+                print("\(addr) was invalid")
+                XCTAssertEqual(error as! MultiaddrError, MultiaddrError.invalidFormat)
+            }
+        }
     }
 
     func testBinaryPackedReturnsCorrectValue_For16BitProtocolPort() {
