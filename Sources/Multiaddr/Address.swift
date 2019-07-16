@@ -20,6 +20,8 @@ struct Address: Equatable {
             return try IPv4.data(for: address)
         case .ip6:
             return try IPv6.data(for: address)
+        case .onion:
+            return try Onion.data(for: address)            
         default:
             return nil
         }

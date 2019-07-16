@@ -77,6 +77,7 @@ final class MultiaddrTests: XCTestCase {
         XCTAssertEqual(full.decapsulate(m2), m1)
     }
     
+    // TODO: Perform validation on INIT! (Not once it's already created on binaryPacked())
     func testCreateMultiaddrFromString_FailsWithInvalidStrings() {
         let addresses = ["notAProtocol",
                    "/ip4/tcp/alsoNotAProtocol",
@@ -111,6 +112,13 @@ final class MultiaddrTests: XCTestCase {
         }
     }
     
+    func testBinaryPacked_ForOnionAddress_EncodesCorrectly() {
+        let expected = "bc039a18087306369043091f0050"
+        let m = try! Multiaddr("/onion/timaq4ygg2iegci7:80")
+        let actual = try! m.binaryPacked().hexString()
+        XCTAssertEqual(actual, expected)
+    }
+    
     static var allTests = [
         ("testLinuxTestSuiteIncludesAllTests",
          testLinuxTestSuiteIncludesAllTests),
@@ -126,6 +134,8 @@ final class MultiaddrTests: XCTestCase {
         ("testBinaryPackedReturnsCorrectValue_For16BitProtocolPort", testBinaryPackedReturnsCorrectValue_For16BitProtocolPort),
         ("testBinaryPackedReturnsCorrectValue_ForIPv4Address", testBinaryPackedReturnsCorrectValue_ForIPv4Address),
         ("testBinaryPackedThrowsError_ForInvalidIPv4Address", testBinaryPackedThrowsError_ForInvalidIPv4Address),
+        ("testBinaryPackedThrowsError_ForInvalidIPv4Address", testBinaryPackedThrowsError_ForInvalidIPv4Address),
+
     ]
     
     /// Credit: https://oleb.net/blog/2017/03/keeping-xctest-in-sync/
