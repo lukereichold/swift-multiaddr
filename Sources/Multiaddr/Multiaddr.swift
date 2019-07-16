@@ -6,6 +6,7 @@ struct Multiaddr: Equatable {
     
     public init(_ string: String) throws {
         addresses = try createAddresses(from: string)
+        try validate()
     }
     
     public init(_ bytes: Data) throws {
@@ -16,7 +17,7 @@ struct Multiaddr: Equatable {
         self.addresses = addresses
     }
     
-    func binaryPacked() throws -> Data { // TODO: too many 'try's here?
+    func binaryPacked() throws -> Data {
         let bytes = try addresses.flatMap { try $0.binaryPacked() }
         return Data(bytes: bytes, count: bytes.count)
     }
@@ -74,6 +75,11 @@ extension Multiaddr {
             addresses.append(newAddress)
         }
         return addresses
+    }
+    
+    /// If we're able to serialize the `Multiaddr` created from a string without error, consider it valid.
+    func validate() throws {
+        _ = try binaryPacked()
     }
 }
 

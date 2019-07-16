@@ -24,6 +24,10 @@ struct Address: Equatable {
             return try Onion.data(for: address)
         case .ipfs:
             return IPFS.data(for: address)
+        case .dns4, .dns6, .dnsaddr:
+            return Data(address.utf8)
+        case .http, .https, .utp, .udt:
+            return nil
         default:
             throw MultiaddrError.parseAddressFail
         }
