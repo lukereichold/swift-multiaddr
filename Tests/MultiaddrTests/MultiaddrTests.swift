@@ -119,6 +119,13 @@ final class MultiaddrTests: XCTestCase {
         XCTAssertEqual(actual, expected)
     }
     
+    func testBinaryPacked_ForIpfsAddress_EncodesCorrectly() {
+        let expected = "A503221220D52EBB89D85B02A284948203A62FF28389C57C9F42BEEC4EC20DB76A68911C0B"
+        let m = try! Multiaddr("/ipfs/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC")
+        let actual = try! m.binaryPacked().hexString()
+        XCTAssertEqual(actual, expected)
+    }
+    
     static var allTests = [
         ("testLinuxTestSuiteIncludesAllTests",
          testLinuxTestSuiteIncludesAllTests),

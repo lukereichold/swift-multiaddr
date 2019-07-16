@@ -4,11 +4,11 @@ struct Multiaddr: Equatable {
     
     private(set) var addresses: [Address] = []
     
-    init(_ string: String) throws {
-       addresses = try createAddresses(from: string)
+    public init(_ string: String) throws {
+        addresses = try createAddresses(from: string)
     }
     
-    init(_ bytes: Data) throws {
+    public init(_ bytes: Data) throws {
         // TODO: ..
     }
     

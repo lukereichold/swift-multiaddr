@@ -21,9 +21,11 @@ struct Address: Equatable {
         case .ip6:
             return try IPv6.data(for: address)
         case .onion:
-            return try Onion.data(for: address)            
+            return try Onion.data(for: address)
+        case .ipfs:
+            return IPFS.data(for: address)
         default:
-            return nil
+            throw MultiaddrError.parseAddressFail
         }
     }
 }
