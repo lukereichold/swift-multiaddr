@@ -7,4 +7,5 @@ enum MultiaddrError: Error {
     case parseIPv6AddressFail
     case invalidPortValue
     case invalidOnionHostAddress
+    case unknownProtocol
 }

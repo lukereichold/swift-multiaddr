@@ -107,3 +107,40 @@ internal enum Varint {
     }
 }
 
+// MARK: - Decoding
+
+/// ADAPTED FROM: https://github.com/golang/go/blob/master/src/encoding/binary/varint.go
+
+typealias DecodedVarInt = (value: UInt64, bytesRead: Int)
+
+extension Varint {
+    /** `readUVarInt` decodes an `UInt64` from a buffer and returns that value and the number of bytes read.
+     
+        If an error occurs, `value` will be 0 and the `numBytes` indicate the following:
+            `numBytes == 0`: buffer too small
+            `numBytes < 0`: value larger than 64 bits (overflow), where `-numBytes` is the number of bytes read.
+     */
+    
+    static func readUVarInt(from buffer: [UInt8]) -> DecodedVarInt {
+        
+        var output: UInt64 = 0
+        var bytesRead = 0
+        var shifter: UInt64 = 0
+        
+        for byte in buffer {
+            if byte < 128 { // Terminator byte (i.e. MSB is not set)
+                if bytesRead > 9 || bytesRead == 9 && byte > 1 {
+                    return (0, -(bytesRead + 1)) // overflow
+                }
+                let varint = output | UInt64(byte) << shifter
+                return (varint, bytesRead + 1)
+            }
+            
+            output |= UInt64(byte & 0x7f) << shifter
+            shifter += 7
+            bytesRead += 1
+        }
+        return (0, 0)
+    }
+
+}

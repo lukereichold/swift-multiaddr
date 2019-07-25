@@ -2,11 +2,33 @@ import Foundation
 
 struct Address: Equatable {
     let addrProtocol: Protocol
-    let address: String?
+    var address: String?
+    
+    init(addrProtocol: Protocol, addressData: Data) {
+        self.addrProtocol = addrProtocol
+        self.address = try? unpackAddress(addressData)
+    }
+    
+    init(addrProtocol: Protocol, address: String? = nil) {
+        self.addrProtocol = addrProtocol
+        self.address = address
+    }
     
     func binaryPacked() throws -> Data {
         let bytes = [addrProtocol.packedCode(), try binaryPackedAddress()].compactMap{$0}.flatMap{$0}
         return Data(bytes: bytes, count: bytes.count)
+    }
+}
+
+extension Address {
+    
+    private func unpackAddress(_ addressData: Data) throws -> String? {
+        switch addrProtocol {
+        case .ip4:
+            return try IPv4.string(for: addressData)
+        default:
+            return ""
+        }
     }
     
     private func binaryPackedAddress() throws -> Data? {

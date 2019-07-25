@@ -17,6 +17,14 @@ final class MultiaddrTests: XCTestCase {
         }
     }
     
+    func testCreateMultiaddrFromBytes_IPv4() {
+        let bytes = [0x04, 0xc0, 0x00, 0x02, 0x2a] as [UInt8] // 04c000022a
+        let data = Data(bytes: bytes, count: bytes.count)
+        let m = try! Multiaddr(data)
+       
+        XCTAssertEqual("/ip4/192.0.2.42", m.description)
+    }
+    
     func testCreateMultiaddrFromString_WithoutAddressValue() {
         let m = try! Multiaddr("/dns6/foo.com/tcp/443/https")
         let expectedAddress1 = Address(addrProtocol: .dns6, address: "foo.com")
@@ -141,6 +149,7 @@ final class MultiaddrTests: XCTestCase {
         ("testBinaryPackedThrowsError_ForInvalidIPv4Address", testBinaryPackedThrowsError_ForInvalidIPv4Address),
         ("testBinaryPacked_ForOnionAddress_EncodesCorrectly", testBinaryPacked_ForOnionAddress_EncodesCorrectly),
         ("testBinaryPacked_ForIpfsAddress_EncodesCorrectly", testBinaryPacked_ForIpfsAddress_EncodesCorrectly),
+        ("testCreateMultiaddrFromBytes_IPv4", testCreateMultiaddrFromBytes_IPv4),
     ]
     
     /// Credit: https://oleb.net/blog/2017/03/keeping-xctest-in-sync/

@@ -10,7 +10,7 @@ struct Multiaddr: Equatable {
     }
     
     public init(_ bytes: Data) throws {
-        // TODO: ..
+        self.addresses = try createAddresses(fromData: bytes)
     }
     
     init(_ addresses: [Address]) {
@@ -77,9 +77,52 @@ extension Multiaddr {
         return addresses
     }
     
+    func createAddresses(fromData data: Data) throws -> [Address] {
+        var buffer = Array(data)
+        var addresses = [Address]()
+        
+        while !buffer.isEmpty {
+            let decodedVarint = Varint.readUVarInt(from: buffer)
+            precondition(decodedVarint.bytesRead >= 0, "Varint size must not exceed 64 bytes.")
+            
+            buffer.removeFirst(decodedVarint.bytesRead)
+                
+            guard let proto = Protocol.forCode(Int(decodedVarint.value)) else { throw MultiaddrError.unknownProtocol }
+            
+            if proto.size() == 0 {
+                addresses.append(Address(addrProtocol: proto))
+                continue
+            }
+            
+            // TODO: get this working
+            let addressSize = sizeForAddress(proto, buffer: buffer)
+
+            let addressBytes = Data(buffer.prefix(addressSize))
+            let address = Address(addrProtocol: proto, addressData: addressBytes)
+            addresses.append(address)
+            
+            buffer.removeFirst(addressSize)
+        }
+        
+        return addresses
+    }
+    
     /// If we're able to serialize the `Multiaddr` created from a string without error, consider it valid.
     func validate() throws {
         _ = try binaryPacked()
+    }
+
+    /// TODO: Why do we even need this???
+    func sizeForAddress(_ proto: Protocol, buffer: [UInt8]) -> Int {
+        switch proto.size() {
+        case let s where s > 0:
+            return s / 8
+        case 0:
+            return 0
+        default:
+            let (sizeValue, bytesRead) = Varint.readUVarInt(from: buffer)
+            return Int(sizeValue) + bytesRead
+        }
     }
 }
 
@@ -90,8 +133,3 @@ extension Array where Element == String {
     }
 }
 
-extension String {
-    func isProtocol() -> Bool {
-        return Protocol.allCases.map{$0.rawValue}.contains(self)
-    }
-}

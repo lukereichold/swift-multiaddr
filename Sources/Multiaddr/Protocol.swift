@@ -37,10 +37,16 @@ extension Protocol {
         switch self {
         case .ip4:
             return 32
-        case .tcp:
+        case .tcp, .udp, .dccp, .sctp:
             return 16
+        case .ip6:
+            return 128
+        case .onion:
+            return 96
+        case .onion3:
+            return 296
         default:
-            return 0 // TODO
+            return 0
         }
     }
     
@@ -112,3 +118,16 @@ extension Protocol {
     }
 }
 
+extension Protocol {
+    static func forCode(_ code: Int) -> Protocol? {
+        return Protocol.allCases.first(where: {$0.code() == code})
+    }
+}
+
+// MARK: - Helpers
+
+extension String {
+    func isProtocol() -> Bool {
+        return Protocol.allCases.map{$0.rawValue}.contains(self)
+    }
+}
