@@ -116,7 +116,7 @@ extension Multiaddr {
     func sizeForAddress(_ proto: Protocol, buffer: [UInt8]) -> Int {
         switch proto.size() {
         case let s where s > 0:
-            return s / 8
+            return s / 8 // # bits -> bytes
         case 0:
             return 0
         default:

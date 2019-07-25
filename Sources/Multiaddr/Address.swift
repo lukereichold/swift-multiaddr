@@ -28,6 +28,9 @@ extension Address {
             return try IPv4.string(for: addressData)
         case .ip6:
             return try IPv6.string(for: addressData)
+        case .tcp, .udp, .dccp, .sctp:
+            guard addressData.count == 2 else { throw MultiaddrError.parseAddressFail }
+            return String(addressData.uint16.bigEndian)
         default:
             return ""
         }

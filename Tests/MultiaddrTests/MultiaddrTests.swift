@@ -25,6 +25,17 @@ final class MultiaddrTests: XCTestCase {
         XCTAssertEqual("/ip4/192.0.2.42", m.description)
     }
     
+    func testCreateMultiaddrFromBytes_TcpAddress() {
+        let bytes = [0x06, 0x10, 0xe1] as [UInt8]
+        let data = Data(bytes: bytes, count: bytes.count)
+        
+        let m_fromString = try! Multiaddr("/tcp/4321")
+        let m_fromData = try! Multiaddr(data)
+        
+        XCTAssertEqual(m_fromData.description, m_fromString.description)
+        XCTAssertEqual(try! m_fromData.binaryPacked(), try! m_fromString.binaryPacked())
+     }
+    
     func testCreateMultiaddrFromString_WithoutAddressValue() {
         let m = try! Multiaddr("/dns6/foo.com/tcp/443/https")
         let expectedAddress1 = Address(addrProtocol: .dns6, address: "foo.com")
