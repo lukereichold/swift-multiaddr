@@ -35,6 +35,8 @@ extension Address {
             return try Onion.string(for: addressData)
         case .ipfs:
             return try IPFS.string(for: addressData)
+        case .dns4, .dns6, .dnsaddr:
+            return try DNS.string(for: addressData)
         case .http, .https, .utp, .udt:
             return nil
         default:
@@ -58,7 +60,7 @@ extension Address {
         case .ipfs:
             return IPFS.data(for: address)
         case .dns4, .dns6, .dnsaddr:
-            return Data(address.utf8)
+            return DNS.data(for: address)
         case .http, .https, .utp, .udt:
             return nil
         default:
