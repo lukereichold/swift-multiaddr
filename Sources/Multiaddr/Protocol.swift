@@ -32,21 +32,30 @@ enum Protocol: String, CaseIterable {
     case memory
 }
 
+enum BitSize {
+    case fixed(bits: Int)
+    case variable
+    case zero
+}
+
 extension Protocol {
-    func size() -> Int {
+    /// The number of bits that an address of this protocol will consume.
+    func size() -> BitSize {
         switch self {
         case .ip4:
-            return 32
+            return .fixed(bits: 32)
         case .tcp, .udp, .dccp, .sctp:
-            return 16
+            return .fixed(bits: 16)
         case .ip6:
-            return 128
+            return .fixed(bits: 128)
         case .onion:
-            return 96
+            return .fixed(bits: 96)
         case .onion3:
-            return 296
+            return .fixed(bits: 296)
+        case .ipfs, .dns4, .dns6, .unix, .p2p:
+            return .variable
         default:
-            return 0
+            return .zero
         }
     }
     

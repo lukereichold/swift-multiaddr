@@ -33,6 +33,8 @@ extension Address {
             return String(addressData.uint16.bigEndian)
         case .onion:
             return try Onion.string(for: addressData)
+        case .ipfs:
+            return try IPFS.string(for: addressData)
         case .http, .https, .utp, .udt:
             return nil
         default:
@@ -61,6 +63,18 @@ extension Address {
             return nil
         default:
             throw MultiaddrError.parseAddressFail
+        }
+    }
+    
+    static func byteSizeForAddress(_ proto: Protocol, buffer: [UInt8]) -> Int {
+        switch proto.size() {
+        case .fixed(let bits):
+            return bits / 8
+        case .variable:
+            let (sizeValue, bytesRead) = Varint.readUVarInt(from: buffer)
+            return Int(sizeValue) + bytesRead
+        case .zero:
+            return 0
         }
     }
 }

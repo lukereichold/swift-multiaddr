@@ -88,15 +88,13 @@ extension Multiaddr {
             buffer.removeFirst(decodedVarint.bytesRead)
                 
             guard let proto = Protocol.forCode(Int(decodedVarint.value)) else { throw MultiaddrError.unknownProtocol }
-            
-            if proto.size() == 0 {
+
+            if case .zero = proto.size() {
                 addresses.append(Address(addrProtocol: proto))
                 continue
             }
             
-            // TODO: get this working
-            let addressSize = sizeForAddress(proto, buffer: buffer)
-
+            let addressSize = Address.byteSizeForAddress(proto, buffer: buffer)
             let addressBytes = Data(buffer.prefix(addressSize))
             let address = Address(addrProtocol: proto, addressData: addressBytes)
             addresses.append(address)
@@ -110,19 +108,6 @@ extension Multiaddr {
     /// If we're able to serialize the `Multiaddr` created from a string without error, consider it valid.
     func validate() throws {
         _ = try binaryPacked()
-    }
-
-    /// TODO: Why do we even need this???
-    func sizeForAddress(_ proto: Protocol, buffer: [UInt8]) -> Int {
-        switch proto.size() {
-        case let s where s > 0:
-            return s / 8 // # bits -> bytes
-        case 0:
-            return 0
-        default:
-            let (sizeValue, bytesRead) = Varint.readUVarInt(from: buffer)
-            return Int(sizeValue) + bytesRead
-        }
     }
 }
 

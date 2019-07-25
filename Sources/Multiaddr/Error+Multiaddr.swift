@@ -8,4 +8,5 @@ enum MultiaddrError: Error {
     case invalidPortValue
     case invalidOnionHostAddress
     case unknownProtocol
+    case ipfsAddressLengthConflict
 }

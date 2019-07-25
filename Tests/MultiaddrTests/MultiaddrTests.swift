@@ -48,6 +48,17 @@ final class MultiaddrTests: XCTestCase {
         XCTAssertEqual(try! m_fromData.binaryPacked(), try! m_fromString.binaryPacked())
     }
     
+    func testCreateMultiaddrFromBytes_IpfsAddress() {
+        let bytes = [0xa5, 0x03, 0x22, 0x12, 0x20, 0xd5, 0x2e, 0xbb, 0x89, 0xd8, 0x5b, 0x02, 0xa2, 0x84, 0x94, 0x82, 0x03, 0xa6, 0x2f, 0xf2, 0x83, 0x89, 0xc5, 0x7c, 0x9f, 0x42, 0xbe, 0xec, 0x4e, 0xc2, 0x0d, 0xb7, 0x6a, 0x68, 0x91, 0x1c, 0x0b] as [UInt8]
+        let data = Data(bytes: bytes, count: bytes.count)
+        
+        let m_fromString = try! Multiaddr("/ipfs/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC")
+        let m_fromData = try! Multiaddr(data)
+        
+        XCTAssertEqual(m_fromData.description, m_fromString.description)
+        XCTAssertEqual(try! m_fromData.binaryPacked(), try! m_fromString.binaryPacked())
+     }
+    
     func testCreateMultiaddrFromString_WithoutAddressValue() {
         let m = try! Multiaddr("/dns6/foo.com/tcp/443/https")
         let expectedAddress1 = Address(addrProtocol: .dns6, address: "foo.com")
@@ -175,6 +186,7 @@ final class MultiaddrTests: XCTestCase {
         ("testCreateMultiaddrFromBytes_IPv4", testCreateMultiaddrFromBytes_IPv4),
         ("testCreateMultiaddrFromBytes_TcpAddress", testCreateMultiaddrFromBytes_TcpAddress),
         ("testCreateMultiaddrFromBytes_Onion", testCreateMultiaddrFromBytes_Onion),
+        ("testCreateMultiaddrFromBytes_IpfsAddress", testCreateMultiaddrFromBytes_IpfsAddress),
 
     ]
     
