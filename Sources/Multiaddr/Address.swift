@@ -26,6 +26,8 @@ extension Address {
         switch addrProtocol {
         case .ip4:
             return try IPv4.string(for: addressData)
+        case .ip6:
+            return try IPv6.string(for: addressData)
         default:
             return ""
         }
