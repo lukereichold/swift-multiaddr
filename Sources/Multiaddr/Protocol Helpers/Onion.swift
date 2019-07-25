@@ -22,4 +22,14 @@ struct Onion {
         onionData.append(portData)
         return onionData
     }
+    
+    static func string(for data: Data) throws -> String {
+        guard data.count == 12 else { throw MultiaddrError.invalidOnionHostAddress }
+        let addressBytes = data.prefix(10)
+        let portBytes = data.suffix(2)
+        
+        let addressEncodedString = base32Encode(addressBytes).lowercased()
+        let portString = String(portBytes.uint16.bigEndian)
+        return "\(addressEncodedString):\(portString)"
+    }
 }

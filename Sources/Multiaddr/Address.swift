@@ -31,8 +31,12 @@ extension Address {
         case .tcp, .udp, .dccp, .sctp:
             guard addressData.count == 2 else { throw MultiaddrError.parseAddressFail }
             return String(addressData.uint16.bigEndian)
+        case .onion:
+            return try Onion.string(for: addressData)
+        case .http, .https, .utp, .udt:
+            return nil
         default:
-            return ""
+            throw MultiaddrError.parseAddressFail
         }
     }
     

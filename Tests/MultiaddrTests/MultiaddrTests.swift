@@ -36,6 +36,18 @@ final class MultiaddrTests: XCTestCase {
         XCTAssertEqual(try! m_fromData.binaryPacked(), try! m_fromString.binaryPacked())
      }
     
+    func testCreateMultiaddrFromBytes_Onion() {
+        
+        let bytes = [0xBC, 0x03, 0x9a, 0x18, 0x08, 0x73, 0x06, 0x36, 0x90, 0x43, 0x09, 0x1f, 0x00, 0x50] as [UInt8]
+        let data = Data(bytes: bytes, count: bytes.count)
+        
+        let m_fromString = try! Multiaddr("/onion/timaq4ygg2iegci7:80")
+        let m_fromData = try! Multiaddr(data)
+        
+        XCTAssertEqual(m_fromData.description, m_fromString.description)
+        XCTAssertEqual(try! m_fromData.binaryPacked(), try! m_fromString.binaryPacked())
+    }
+    
     func testCreateMultiaddrFromString_WithoutAddressValue() {
         let m = try! Multiaddr("/dns6/foo.com/tcp/443/https")
         let expectedAddress1 = Address(addrProtocol: .dns6, address: "foo.com")
@@ -161,6 +173,9 @@ final class MultiaddrTests: XCTestCase {
         ("testBinaryPacked_ForOnionAddress_EncodesCorrectly", testBinaryPacked_ForOnionAddress_EncodesCorrectly),
         ("testBinaryPacked_ForIpfsAddress_EncodesCorrectly", testBinaryPacked_ForIpfsAddress_EncodesCorrectly),
         ("testCreateMultiaddrFromBytes_IPv4", testCreateMultiaddrFromBytes_IPv4),
+        ("testCreateMultiaddrFromBytes_TcpAddress", testCreateMultiaddrFromBytes_TcpAddress),
+        ("testCreateMultiaddrFromBytes_Onion", testCreateMultiaddrFromBytes_Onion),
+
     ]
     
     /// Credit: https://oleb.net/blog/2017/03/keeping-xctest-in-sync/
