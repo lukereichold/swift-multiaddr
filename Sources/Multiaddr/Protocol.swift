@@ -1,6 +1,6 @@
 import Foundation
 
-enum Protocol: String, CaseIterable {
+public enum Protocol: String, CaseIterable {
     case ip4
     case tcp
     case udp

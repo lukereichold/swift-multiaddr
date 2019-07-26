@@ -2,7 +2,7 @@ import Foundation
 
 public struct Multiaddr: Equatable {
     
-    private(set) var addresses: [Address] = []
+    public private(set) var addresses: [Address] = []
     
     public init(_ string: String) throws {
         addresses = try createAddresses(from: string)
