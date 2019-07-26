@@ -20,7 +20,7 @@
 
 ### Swift Package Manager
 
-To use [Swift Package Manager](https://swift.org/package-manager/), add `Multiaddr` to your `Package.swift` file:
+To use [Swift Package Manager](https://swift.org/package-manager/), add `Multiaddr` to your `Package.swift` file. Alternatively, [add it from Xcode directly](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app).
 
 ```swift
 let package = Package(

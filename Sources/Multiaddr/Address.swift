@@ -1,6 +1,6 @@
 import Foundation
 
-struct Address: Equatable {
+public struct Address: Equatable {
     let addrProtocol: Protocol
     var address: String?
     
@@ -82,7 +82,7 @@ extension Address {
 }
 
 extension Address: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         return "/" + [addrProtocol.rawValue, address].compactMap{$0}.joined(separator: "/")
     }
 }
