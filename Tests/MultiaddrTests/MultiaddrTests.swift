@@ -116,7 +116,10 @@ final class MultiaddrTests: XCTestCase {
         let m2 = try! Multiaddr("/ip4/1.2.3.4")
         
         XCTAssertEqual(full.decapsulate(m1), m2)
-        XCTAssertEqual(full.decapsulate(m2), m1)
+        
+        let m3 = try! Multiaddr("/dns4/foo.com/tcp/80/http/bar/baz.jpg")
+        let decapsulated = m3.decapsulate(m1)
+        XCTAssertEqual(decapsulated, try Multiaddr("/dns4/foo.com"))
     }
     
     func testCreateMultiaddrFromString_FailsWithInvalidStrings() {

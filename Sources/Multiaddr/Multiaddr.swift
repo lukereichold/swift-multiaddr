@@ -36,10 +36,10 @@ public struct Multiaddr: Equatable {
         return encapsulate(try Multiaddr(other))
     }
     
-    /// Returns a new `Multiaddr` with the outermost specified `Multiaddr` removed.
+    /// Returns a new `Multiaddr`, removing the specified `Multiaddr` and all subsequent addresses.
     public func decapsulate(_ other: Multiaddr) -> Multiaddr {
-        let new = addresses.filter { $0 != other.addresses.first }
-        return Multiaddr(new)
+        let new = addresses.prefix(while: { $0 != other.addresses.first } )
+        return Multiaddr(Array(new))
     }
     
     /// Removes and returns the last `Address` of this `Multiaddr`.
