@@ -52,8 +52,70 @@ Then run `carthage update` and use the framework in `Carthage/Build/<platform>`.
 
 ## Usage
 
+#### Human-readable encoding
 ```swift
-Coming Soon -- see Multiaddr.playground
+let addr = try Multiaddr("/dns6/foo.com/tcp/443/https")
+dump(addr)
+
+▿ /dns6/foo.com/tcp/443/https
+  ▿ addresses : 3 elements
+    ▿ 0 : /dns6/foo.com
+      - addrProtocol : Multiaddr.Protocol.dns6
+      ▿ address : Optional<String>
+        - some : "foo.com"
+    ▿ 1 : /tcp/443
+      - addrProtocol : Multiaddr.Protocol.tcp
+      ▿ address : Optional<String>
+        - some : "443"
+    ▿ 2 : /https
+      - addrProtocol : Multiaddr.Protocol.https
+      - address : nil
+```
+
+#### Binary encoding with packing
+```swift
+let serializedData = try addr.binaryPacked()
+/// (`Data`) 14 bytes
+```
+
+#### Binary decoding
+```swift
+let addrFromData = try Multiaddr(serializedData)
+/// `[Multiaddr.Address]`  3 values
+```
+
+#### Equatable Support
+```swift
+assert(addr == addrFromData) /// true
+```
+
+#### Protocol / address enumeration
+```swift
+print(addr.protocols())
+/// `["dns6", "tcp", "https"]`
+```
+
+#### Encapsulate
+```swift
+let encapsulated = try Multiaddr("/dns4/foo.com").encapsulate("tcp/80/http/bar/baz.jpg")
+print(encapsulated) /// `/dns4/foo.com/tcp/80/http/bar/baz.jpg`
+```
+
+#### Decapsulate
+```swift
+let tcpComponent = try Multiaddr("tcp/80")
+let decapsulated = encapsulated.decapsulate(tcpComponent)
+print(decapsulated) /// `/dns4/foo.com`
+```
+
+#### `pop()`
+```swift
+let popped = addr.pop()
+Optional<Address>
+  ▿ some : /https
+    - addrProtocol : Multiaddr.Protocol.https
+    - address : nil
+
 ```
 
 ## Contribute
