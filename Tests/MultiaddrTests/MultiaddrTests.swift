@@ -36,6 +36,14 @@ final class MultiaddrTests: XCTestCase {
         XCTAssertEqual(try! m_fromData.binaryPacked(), try! m_fromString.binaryPacked())
      }
     
+    func testDnsSerialization() {
+        let addr = try! Multiaddr("/dns6/foo.com")
+        let serialized = try! addr.binaryPacked()
+        
+        let deserialized = try! Multiaddr(serialized)
+        XCTAssertEqual(addr, deserialized)
+    }
+    
     func testCreateMultiaddrFromBytes_Onion() {
         
         let bytes = [0xBC, 0x03, 0x9a, 0x18, 0x08, 0x73, 0x06, 0x36, 0x90, 0x43, 0x09, 0x1f, 0x00, 0x50] as [UInt8]
@@ -190,6 +198,7 @@ final class MultiaddrTests: XCTestCase {
         ("testCreateMultiaddrFromBytes_TcpAddress", testCreateMultiaddrFromBytes_TcpAddress),
         ("testCreateMultiaddrFromBytes_Onion", testCreateMultiaddrFromBytes_Onion),
         ("testCreateMultiaddrFromBytes_IpfsAddress", testCreateMultiaddrFromBytes_IpfsAddress),
+        ("testDnsSerialization", testDnsSerialization),
 
     ]
     
