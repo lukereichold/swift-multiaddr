@@ -1,11 +1,9 @@
 # swift-multiaddr
 
-[![](https://img.shields.io/badge/project-multiformats-blue.svg?style=flat-square)](https://github.com/multiformats/multiformats)
-[![](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
-[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/lukereichold/swift-multiaddr/blob/master/LICENSE) 
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Flukereichold%2Fswift-multiaddr%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/lukereichold/swift-multiaddr)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Flukereichold%2Fswift-multiaddr%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/lukereichold/swift-multiaddr)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) 
-[![SPM compatible](https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat)](https://swift.org/package-manager)
-
+[![GitHub license](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/lukereichold/swift-multiaddr/blob/master/LICENSE) 
 
 > [multiaddr](https://github.com/multiformats/multiaddr): Composable and future-proof network addresses, available as a modern, zero-dependency Swift library.
 
